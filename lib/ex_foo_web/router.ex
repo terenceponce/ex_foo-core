@@ -7,6 +7,8 @@ defmodule ExFooWeb.Router do
 
   scope "/api", ExFooWeb do
     pipe_through :api
+
+    resources "/users", UserController, except: [:new, :edit]
   end
 
   def swagger_info do
