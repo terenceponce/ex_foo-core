@@ -11,6 +11,13 @@ defmodule ExFooWeb.Router do
     resources "/users", UserController, except: [:new, :edit]
   end
 
+  scope "/swagger" do
+    forward "/", PhoenixSwagger.Plug.SwaggerUI,
+      otp_app: :ex_foo,
+      swagger_file: "swagger.json",
+      disable_validator: true
+  end
+
   def swagger_info do
     %{
       info: %{
