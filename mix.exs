@@ -44,7 +44,8 @@ defmodule ExFoo.Mixfile do
       {:credo, "~> 0.9.0-rc1", only: [:dev, :test], runtime: false},
       {:excoveralls, "~> 0.8", only: :test},
       {:phoenix_swagger, "~> 0.7.0"},
-      {:ex_json_schema, "~> 0.5"}
+      {:ex_json_schema, "~> 0.5"},
+      {:ex_machina, "~> 2.1", only: :test}
     ]
   end
 

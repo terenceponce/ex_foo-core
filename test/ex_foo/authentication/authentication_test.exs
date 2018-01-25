@@ -1,5 +1,6 @@
 defmodule ExFoo.AuthenticationTest do
   use ExFoo.DataCase
+  import ExFoo.Factory
 
   alias ExFoo.Authentication
 
@@ -10,22 +11,13 @@ defmodule ExFoo.AuthenticationTest do
     @update_attrs %{email: "some updated email", encrypted_password: "some updated encrypted_password"}
     @invalid_attrs %{email: nil, encrypted_password: nil}
 
-    def user_fixture(attrs \\ %{}) do
-      {:ok, user} =
-        attrs
-        |> Enum.into(@valid_attrs)
-        |> Authentication.create_user()
-
-      user
-    end
-
     test "list_users/0 returns all users" do
-      user = user_fixture()
-      assert Authentication.list_users() == [user]
+      users = insert_list(3, :user, %{encrypted_password: "abcdef12345"})
+      assert Authentication.list_users() == users
     end
 
     test "get_user/1 returns the user with given id" do
-      user = user_fixture()
+      user = insert(:user)
       assert Authentication.get_user(user.id) == user
     end
 
@@ -40,7 +32,7 @@ defmodule ExFoo.AuthenticationTest do
     end
 
     test "update_user/2 with valid data updates the user" do
-      user = user_fixture()
+      user = insert(:user)
       assert {:ok, user} = Authentication.update_user(user, @update_attrs)
       assert %User{} = user
       assert user.email == "some updated email"
@@ -48,19 +40,19 @@ defmodule ExFoo.AuthenticationTest do
     end
 
     test "update_user/2 with invalid data returns error changeset" do
-      user = user_fixture()
+      user = insert(:user)
       assert {:error, %Ecto.Changeset{}} = Authentication.update_user(user, @invalid_attrs)
       assert user == Authentication.get_user(user.id)
     end
 
     test "delete_user/1 deletes the user" do
-      user = user_fixture()
+      user = insert(:user)
       assert {:ok, %User{}} = Authentication.delete_user(user)
       assert Authentication.get_user(user.id) == nil
     end
 
     test "change_user/1 returns a user changeset" do
-      user = user_fixture()
+      user = insert(:user)
       assert %Ecto.Changeset{} = Authentication.change_user(user)
     end
   end

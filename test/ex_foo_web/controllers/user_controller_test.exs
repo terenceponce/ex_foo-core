@@ -1,17 +1,12 @@
 defmodule ExFooWeb.UserControllerTest do
   use ExFooWeb.ConnCase
+  import ExFoo.Factory
 
-  alias ExFoo.Authentication
   alias ExFoo.Authentication.User
 
   @create_attrs %{email: "some email", encrypted_password: "some encrypted_password"}
   @update_attrs %{email: "some updated email", encrypted_password: "some updated encrypted_password"}
   @invalid_attrs %{email: nil, encrypted_password: nil}
-
-  def fixture(:user) do
-    {:ok, user} = Authentication.create_user(@create_attrs)
-    user
-  end
 
   setup %{conn: conn} do
     {:ok, conn: put_req_header(conn, "accept", "application/json")}
@@ -72,7 +67,7 @@ defmodule ExFooWeb.UserControllerTest do
   end
 
   defp create_user(_) do
-    user = fixture(:user)
+    user = insert(:user)
     {:ok, user: user}
   end
 end
