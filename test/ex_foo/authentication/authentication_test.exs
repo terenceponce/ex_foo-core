@@ -7,8 +7,8 @@ defmodule ExFoo.AuthenticationTest do
   describe "users" do
     alias ExFoo.Authentication.User
 
-    @valid_attrs %{email: "some email", encrypted_password: "some encrypted_password"}
-    @update_attrs %{email: "some updated email", encrypted_password: "some updated encrypted_password"}
+    @valid_attrs %{email: "test@example.com", encrypted_password: "some encrypted_password"}
+    @update_attrs %{email: "updated@example.com", encrypted_password: "some updated encrypted_password"}
     @invalid_attrs %{email: nil, encrypted_password: nil}
 
     test "list_users/0 returns all users" do
@@ -23,7 +23,7 @@ defmodule ExFoo.AuthenticationTest do
 
     test "create_user/1 with valid data creates a user" do
       assert {:ok, %User{} = user} = Authentication.create_user(@valid_attrs)
-      assert user.email == "some email"
+      assert user.email == "test@example.com"
       assert user.encrypted_password == "some encrypted_password"
     end
 
@@ -35,7 +35,7 @@ defmodule ExFoo.AuthenticationTest do
       user = insert(:user)
       assert {:ok, user} = Authentication.update_user(user, @update_attrs)
       assert %User{} = user
-      assert user.email == "some updated email"
+      assert user.email == "updated@example.com"
       assert user.encrypted_password == "some updated encrypted_password"
     end
 

@@ -3,8 +3,8 @@ defmodule ExFooWeb.UserControllerTest do
   use PhoenixSwagger.SchemaTest, "priv/static/swagger.json"
   import ExFoo.Factory
 
-  @create_attrs %{email: "some email", encrypted_password: "some encrypted_password"}
-  @update_attrs %{email: "some updated email", encrypted_password: "some updated encrypted_password"}
+  @create_attrs %{email: "test@example.com", encrypted_password: "some encrypted_password"}
+  @update_attrs %{email: "updated@example.com", encrypted_password: "some updated encrypted_password"}
   @invalid_attrs %{email: nil, encrypted_password: nil}
 
   setup %{conn: conn} do
@@ -47,7 +47,7 @@ defmodule ExFooWeb.UserControllerTest do
         |> json_response(201)
 
       refute data["id"] == nil
-      refute data["email"] == nil
+      assert data["email"] == "test@example.com"
       refute data["inserted_at"] == nil
       refute data["updated_at"] == nil
     end
@@ -68,7 +68,7 @@ defmodule ExFooWeb.UserControllerTest do
         |> json_response(200)
 
       assert data["id"] == "#{user.id}"
-      assert data["email"] == "some updated email"
+      assert data["email"] == "updated@example.com"
       assert data["inserted_at"] == NaiveDateTime.to_iso8601(user.inserted_at)
       refute data["updated_at"] == NaiveDateTime.to_iso8601(user.updated_at)
     end
