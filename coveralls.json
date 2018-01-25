@@ -1,0 +1,16 @@
+{
+  "skip_files": [
+    "test",
+    "lib/ex_foo.ex",
+    "lib/ex_foo/repo.ex",
+    "lib/ex_foo_web.ex",
+    "lib/ex_foo_web/endpoint.ex",
+    "lib/ex_foo_web/gettext.ex",
+    "lib/ex_foo_web/router.ex",
+    "lib/ex_foo_web/channels/user_socket.ex",
+    "lib/ex_foo_web/controllers/fallback_controller.ex",
+    "lib/ex_foo_web/views/error_helpers.ex",
+    "lib/ex_foo_web/views/error_view.ex",
+    "lib/ex_foo/application.ex"
+  ]
+}
