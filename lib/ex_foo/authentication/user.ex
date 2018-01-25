@@ -1,8 +1,10 @@
 defmodule ExFoo.Authentication.User do
+  @moduledoc """
+  User model
+  """
   use Ecto.Schema
   import Ecto.Changeset
   alias ExFoo.Authentication.User
-
 
   schema "users" do
     field :email, :string
