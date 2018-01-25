@@ -1,8 +1,7 @@
 defmodule ExFooWeb.UserControllerTest do
   use ExFooWeb.ConnCase
+  use PhoenixSwagger.SchemaTest, "priv/static/swagger.json"
   import ExFoo.Factory
-
-  alias ExFoo.Authentication.User
 
   @create_attrs %{email: "some email", encrypted_password: "some encrypted_password"}
   @update_attrs %{email: "some updated email", encrypted_password: "some updated encrypted_password"}
@@ -13,22 +12,44 @@ defmodule ExFooWeb.UserControllerTest do
   end
 
   describe "index" do
-    test "lists all users", %{conn: conn} do
-      conn = get conn, user_path(conn, :index)
-      assert json_response(conn, 200)["data"] == []
+    test "lists all users", %{conn: conn, swagger_schema: schema} do
+      user = insert(:user)
+      user2 = insert(:user)
+      data = conn
+        |> get(user_path(conn, :index))
+        |> validate_resp_schema(schema, "Users")
+        |> json_response(200)
+
+      expected_result = [
+        %{
+          "id" => "#{user.id}",
+          "email" => user.email,
+          "inserted_at" => NaiveDateTime.to_iso8601(user.inserted_at),
+          "updated_at" => NaiveDateTime.to_iso8601(user.updated_at),
+        },
+        %{
+          "id" => "#{user2.id}",
+          "email" => user2.email,
+          "inserted_at" => NaiveDateTime.to_iso8601(user2.inserted_at),
+          "updated_at" => NaiveDateTime.to_iso8601(user2.updated_at),
+        }
+      ]
+
+      assert expected_result == data
     end
   end
 
   describe "create user" do
-    test "renders user when data is valid", %{conn: conn} do
-      conn = post conn, user_path(conn, :create), user: @create_attrs
-      assert %{"id" => id} = json_response(conn, 201)["data"]
+    test "renders user when data is valid", %{conn: conn, swagger_schema: schema} do
+      data = conn
+        |> post(user_path(conn, :create), user: @create_attrs)
+        |> validate_resp_schema(schema, "User")
+        |> json_response(201)
 
-      conn = get conn, user_path(conn, :show, id)
-      assert json_response(conn, 200)["data"] == %{
-        "id" => id,
-        "email" => "some email",
-        "encrypted_password" => "some encrypted_password"}
+      refute data["id"] == nil
+      refute data["email"] == nil
+      refute data["inserted_at"] == nil
+      refute data["updated_at"] == nil
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
@@ -40,15 +61,16 @@ defmodule ExFooWeb.UserControllerTest do
   describe "update user" do
     setup [:create_user]
 
-    test "renders user when data is valid", %{conn: conn, user: %User{id: id} = user} do
-      conn = put conn, user_path(conn, :update, user), user: @update_attrs
-      assert %{"id" => ^id} = json_response(conn, 200)["data"]
+    test "renders user when data is valid", %{conn: conn, user: user, swagger_schema: schema} do
+      data = conn
+        |> put(user_path(conn, :update, user), user: @update_attrs)
+        |> validate_resp_schema(schema, "User")
+        |> json_response(200)
 
-      conn = get conn, user_path(conn, :show, id)
-      assert json_response(conn, 200)["data"] == %{
-        "id" => id,
-        "email" => "some updated email",
-        "encrypted_password" => "some updated encrypted_password"}
+      assert data["id"] == "#{user.id}"
+      assert data["email"] == "some updated email"
+      assert data["inserted_at"] == NaiveDateTime.to_iso8601(user.inserted_at)
+      refute data["updated_at"] == NaiveDateTime.to_iso8601(user.updated_at)
     end
 
     test "renders errors when data is invalid", %{conn: conn, user: user} do

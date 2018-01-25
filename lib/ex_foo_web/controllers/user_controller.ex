@@ -1,14 +1,67 @@
 defmodule ExFooWeb.UserController do
   use ExFooWeb, :controller
+  use PhoenixSwagger
 
   alias ExFoo.Authentication, as: AuthContext
   alias ExFoo.Authentication.User
 
   action_fallback ExFooWeb.FallbackController
 
+  def swagger_definitions do
+    %{
+      User: swagger_schema do
+        title "User"
+        description "A user of the application"
+        properties do
+          id :string, "ID of the user", required: true
+          email :string, "Email address of the user", required: true
+          inserted_at :string, "When the user was created", format: "ISO-8601"
+          updated_at :string, "When the user was last modified", format: "ISO-8601"
+        end
+        example %{
+          id: "123",
+          email: "test@example.com",
+          inserted_at: "2018-01-25T14:00:00Z",
+          updated_at: "2018-01-25T14:00:00Z",
+        }
+      end,
+      Users: swagger_schema do
+        title "Users"
+        description "A collection of users"
+        type :array
+        items Schema.ref(:User)
+      end,
+      Error: swagger_schema do
+        title "Error"
+        description "Error responses from the API"
+        properties do
+          error :string, "The message of the error raised", required: true
+        end
+      end
+    }
+  end
+
+  swagger_path :index do
+    get "/"
+    summary "List all users"
+    description "List all users registered in the application"
+    response 200, "Ok", Schema.ref(:Users)
+  end
+
   def index(conn, _params) do
     users = AuthContext.list_users()
     render(conn, "index.json", users: users)
+  end
+
+  swagger_path :create do
+    post "/"
+    summary "Add a new user"
+    description "Register a new user to the application"
+    parameters do
+      user :body, Schema.ref(:User), "User to be created", required: true
+    end
+    response 201, "Ok", Schema.ref(:User)
+    response 422, "Unprocessable Entity", Schema.ref(:Error)
   end
 
   def create(conn, %{"user" => user_params}) do
@@ -20,9 +73,32 @@ defmodule ExFooWeb.UserController do
     end
   end
 
+  swagger_path :show do
+    get "/{id}"
+    summary "Retrieve a user"
+    description "Retrieve a user registered in the application"
+    parameters do
+      id :path, :string, "The ID of the user", required: true
+    end
+    response 200, "Ok", Schema.ref(:User)
+    response 404, "Not Found", Schema.ref(:Error)
+  end
+
   def show(conn, %{"id" => id}) do
     user = AuthContext.get_user(id)
     render(conn, "show.json", user: user)
+  end
+
+  swagger_path :update do
+    patch "/{id}"
+    summary "Update an existing user"
+    description "Update the details of an existing user"
+    parameters do
+      id :path, :string, "The ID of the user", required: true
+      user :body, Schema.ref(:User), "The user details to be updated"
+    end
+    response 200, "Ok", Schema.ref(:User)
+    response 422, "Unprocessable Entity", Schema.ref(:Error)
   end
 
   def update(conn, %{"id" => id, "user" => user_params}) do
@@ -31,6 +107,17 @@ defmodule ExFooWeb.UserController do
     with {:ok, %User{} = user} <- AuthContext.update_user(user, user_params) do
       render(conn, "show.json", user: user)
     end
+  end
+
+  swagger_path :delete do
+    delete "/{id}"
+    summary "Delete a user"
+    description "Remove a user from the application"
+    parameters do
+      id :path, :string, "The ID of the user", required: true
+    end
+    response 204, "No Content"
+    response 404, "Not Found"
   end
 
   def delete(conn, %{"id" => id}) do

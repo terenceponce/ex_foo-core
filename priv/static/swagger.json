@@ -1,0 +1,219 @@
+{
+  "swagger": "2.0",
+  "paths": {
+    "/{id}": {
+      "patch": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Update an existing user",
+        "responses": {
+          "422": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            },
+            "description": "Unprocessable Entity"
+          },
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/User"
+            },
+            "description": "Ok"
+          }
+        },
+        "parameters": [
+          {
+            "type": "string",
+            "required": true,
+            "name": "id",
+            "in": "path",
+            "description": "The ID of the user"
+          },
+          {
+            "schema": {
+              "$ref": "#/definitions/User"
+            },
+            "required": false,
+            "name": "user",
+            "in": "body",
+            "description": "The user details to be updated"
+          }
+        ],
+        "operationId": "ExFooWeb.UserController.update",
+        "description": "Update the details of an existing user"
+      },
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Retrieve a user",
+        "responses": {
+          "404": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            },
+            "description": "Not Found"
+          },
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/User"
+            },
+            "description": "Ok"
+          }
+        },
+        "parameters": [
+          {
+            "type": "string",
+            "required": true,
+            "name": "id",
+            "in": "path",
+            "description": "The ID of the user"
+          }
+        ],
+        "operationId": "ExFooWeb.UserController.show",
+        "description": "Retrieve a user registered in the application"
+      },
+      "delete": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Delete a user",
+        "responses": {
+          "404": {
+            "description": "Not Found"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "parameters": [
+          {
+            "type": "string",
+            "required": true,
+            "name": "id",
+            "in": "path",
+            "description": "The ID of the user"
+          }
+        ],
+        "operationId": "ExFooWeb.UserController.delete",
+        "description": "Remove a user from the application"
+      }
+    },
+    "/": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Add a new user",
+        "responses": {
+          "422": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            },
+            "description": "Unprocessable Entity"
+          },
+          "201": {
+            "schema": {
+              "$ref": "#/definitions/User"
+            },
+            "description": "Ok"
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "$ref": "#/definitions/User"
+            },
+            "required": true,
+            "name": "user",
+            "in": "body",
+            "description": "User to be created"
+          }
+        ],
+        "operationId": "ExFooWeb.UserController.create",
+        "description": "Register a new user to the application"
+      },
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "List all users",
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/Users"
+            },
+            "description": "Ok"
+          }
+        },
+        "parameters": [],
+        "operationId": "ExFooWeb.UserController.index",
+        "description": "List all users registered in the application"
+      }
+    }
+  },
+  "info": {
+    "version": "0.1.0",
+    "title": "Ex Foo"
+  },
+  "host": "localhost:4000",
+  "definitions": {
+    "Users": {
+      "type": "array",
+      "title": "Users",
+      "items": {
+        "$ref": "#/definitions/User"
+      },
+      "description": "A collection of users"
+    },
+    "User": {
+      "type": "object",
+      "title": "User",
+      "required": [
+        "email",
+        "id"
+      ],
+      "properties": {
+        "updated_at": {
+          "type": "string",
+          "format": "ISO-8601",
+          "description": "When the user was last modified"
+        },
+        "inserted_at": {
+          "type": "string",
+          "format": "ISO-8601",
+          "description": "When the user was created"
+        },
+        "id": {
+          "type": "string",
+          "description": "ID of the user"
+        },
+        "email": {
+          "type": "string",
+          "description": "Email address of the user"
+        }
+      },
+      "example": {
+        "updated_at": "2018-01-25T14:00:00Z",
+        "inserted_at": "2018-01-25T14:00:00Z",
+        "id": "123",
+        "email": "test@example.com"
+      },
+      "description": "A user of the application"
+    },
+    "Error": {
+      "type": "object",
+      "title": "Error",
+      "required": [
+        "error"
+      ],
+      "properties": {
+        "error": {
+          "type": "string",
+          "description": "The message of the error raised"
+        }
+      },
+      "description": "Error responses from the API"
+    }
+  }
+}
