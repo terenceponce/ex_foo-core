@@ -21,12 +21,12 @@ defmodule ExFooWeb.UserController do
   end
 
   def show(conn, %{"id" => id}) do
-    user = AuthContext.get_user!(id)
+    user = AuthContext.get_user(id)
     render(conn, "show.json", user: user)
   end
 
   def update(conn, %{"id" => id, "user" => user_params}) do
-    user = AuthContext.get_user!(id)
+    user = AuthContext.get_user(id)
 
     with {:ok, %User{} = user} <- AuthContext.update_user(user, user_params) do
       render(conn, "show.json", user: user)
@@ -34,7 +34,7 @@ defmodule ExFooWeb.UserController do
   end
 
   def delete(conn, %{"id" => id}) do
-    user = AuthContext.get_user!(id)
+    user = AuthContext.get_user(id)
     with {:ok, %User{}} <- AuthContext.delete_user(user) do
       send_resp(conn, :no_content, "")
     end

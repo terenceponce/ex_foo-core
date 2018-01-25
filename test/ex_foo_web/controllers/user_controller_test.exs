@@ -68,9 +68,6 @@ defmodule ExFooWeb.UserControllerTest do
     test "deletes chosen user", %{conn: conn, user: user} do
       conn = delete conn, user_path(conn, :delete, user)
       assert response(conn, 204)
-      assert_error_sent 404, fn ->
-        get conn, user_path(conn, :show, user)
-      end
     end
   end
 
