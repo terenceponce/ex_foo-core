@@ -21,5 +21,6 @@ defmodule ExFoo.Authentication.User do
     |> cast(attrs, [:email, :encrypted_password])
     |> validate_required([:email, :encrypted_password])
     |> validate_format(:email, @valid_email_format)
+    |> unique_constraint(:email)
   end
 end

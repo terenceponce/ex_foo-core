@@ -27,6 +27,13 @@ defmodule ExFoo.AuthenticationTest do
       assert user.encrypted_password == "some encrypted_password"
     end
 
+    test "create_user/1 with duplicate email returns error changeset" do
+      insert(:user, email: "test@example.com")
+      {status, changeset} = Authentication.create_user(@valid_attrs)
+      assert status == :error
+      assert {"has already been taken", []} == changeset.errors[:email]
+    end
+
     test "create_user/1 with invalid data returns error changeset" do
       assert {:error, %Ecto.Changeset{}} = Authentication.create_user(@invalid_attrs)
     end
@@ -37,6 +44,14 @@ defmodule ExFoo.AuthenticationTest do
       assert %User{} = user
       assert user.email == "updated@example.com"
       assert user.encrypted_password == "some updated encrypted_password"
+    end
+
+    test "update_user/2 with duplicate email returns error changeset" do
+      insert(:user, email: "updated@example.com")
+      user = insert(:user)
+      {status, changeset} = Authentication.update_user(user, @update_attrs)
+      assert status == :error
+      assert {"has already been taken", []} == changeset.errors[:email]
     end
 
     test "update_user/2 with invalid data returns error changeset" do
