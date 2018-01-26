@@ -1,0 +1,95 @@
+defmodule ExFooWeb.UserControllerTest do
+  use ExFooWeb.ConnCase
+  use PhoenixSwagger.SchemaTest, "priv/static/swagger.json"
+  import ExFoo.Factory
+
+  @create_attrs %{email: "test@example.com", encrypted_password: "some encrypted_password"}
+  @update_attrs %{email: "updated@example.com", encrypted_password: "some updated encrypted_password"}
+  @invalid_attrs %{email: nil, encrypted_password: nil}
+
+  setup %{conn: conn} do
+    {:ok, conn: put_req_header(conn, "accept", "application/json")}
+  end
+
+  describe "index" do
+    test "lists all users", %{conn: conn, swagger_schema: schema} do
+      user = insert(:user)
+      user2 = insert(:user)
+      data = conn
+        |> get(user_path(conn, :index))
+        |> validate_resp_schema(schema, "Users")
+        |> json_response(200)
+
+      expected_result = [
+        %{
+          "id" => "#{user.id}",
+          "email" => user.email,
+          "inserted_at" => NaiveDateTime.to_iso8601(user.inserted_at),
+          "updated_at" => NaiveDateTime.to_iso8601(user.updated_at),
+        },
+        %{
+          "id" => "#{user2.id}",
+          "email" => user2.email,
+          "inserted_at" => NaiveDateTime.to_iso8601(user2.inserted_at),
+          "updated_at" => NaiveDateTime.to_iso8601(user2.updated_at),
+        }
+      ]
+
+      assert expected_result == data
+    end
+  end
+
+  describe "create user" do
+    test "renders user when data is valid", %{conn: conn, swagger_schema: schema} do
+      data = conn
+        |> post(user_path(conn, :create), user: @create_attrs)
+        |> validate_resp_schema(schema, "User")
+        |> json_response(201)
+
+      refute data["id"] == nil
+      assert data["email"] == "test@example.com"
+      refute data["inserted_at"] == nil
+      refute data["updated_at"] == nil
+    end
+
+    test "renders errors when data is invalid", %{conn: conn} do
+      conn = post conn, user_path(conn, :create), user: @invalid_attrs
+      assert json_response(conn, 422)["errors"] != %{}
+    end
+  end
+
+  describe "update user" do
+    setup [:create_user]
+
+    test "renders user when data is valid", %{conn: conn, user: user, swagger_schema: schema} do
+      data = conn
+        |> put(user_path(conn, :update, user), user: @update_attrs)
+        |> validate_resp_schema(schema, "User")
+        |> json_response(200)
+
+      assert data["id"] == "#{user.id}"
+      assert data["email"] == "updated@example.com"
+      assert data["inserted_at"] == NaiveDateTime.to_iso8601(user.inserted_at)
+      refute data["updated_at"] == NaiveDateTime.to_iso8601(user.updated_at)
+    end
+
+    test "renders errors when data is invalid", %{conn: conn, user: user} do
+      conn = put conn, user_path(conn, :update, user), user: @invalid_attrs
+      assert json_response(conn, 422)["errors"] != %{}
+    end
+  end
+
+  describe "delete user" do
+    setup [:create_user]
+
+    test "deletes chosen user", %{conn: conn, user: user} do
+      conn = delete conn, user_path(conn, :delete, user)
+      assert response(conn, 204)
+    end
+  end
+
+  defp create_user(_) do
+    user = insert(:user)
+    {:ok, user: user}
+  end
+end

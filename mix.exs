@@ -42,7 +42,10 @@ defmodule ExFoo.Mixfile do
       {:gettext, "~> 0.11"},
       {:cowboy, "~> 1.0"},
       {:credo, "~> 0.9.0-rc1", only: [:dev, :test], runtime: false},
-      {:excoveralls, "~> 0.8", only: :test}
+      {:excoveralls, "~> 0.8", only: :test},
+      {:phoenix_swagger, "~> 0.7.0"},
+      {:ex_json_schema, "~> 0.5"},
+      {:ex_machina, "~> 2.1", only: :test}
     ]
   end
 
@@ -56,7 +59,8 @@ defmodule ExFoo.Mixfile do
     [
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
-      "test": ["ecto.create --quiet", "ecto.migrate", "test"]
+      "test": ["ecto.create --quiet", "ecto.migrate", "swagger", "test"],
+      "swagger": ["phx.swagger.generate priv/static/swagger.json --router ExFooWeb.Router --endpoint ExFooWeb.Endpoint"]
     ]
   end
 end
