@@ -42,7 +42,7 @@ defmodule ExFooWeb.UserController do
   end
 
   swagger_path :index do
-    get "/"
+    get "/users"
     summary "List all users"
     description "List all users registered in the application"
     response 200, "Ok", Schema.ref(:Users)
@@ -76,7 +76,7 @@ defmodule ExFooWeb.UserController do
   end
 
   swagger_path :show do
-    get "/{id}"
+    get "/users/{userId}"
     summary "Retrieve a user"
     description "Retrieve a user registered in the application"
     parameters do
@@ -92,12 +92,12 @@ defmodule ExFooWeb.UserController do
   end
 
   swagger_path :update do
-    patch "/{id}"
+    patch "/users/{userId}"
     summary "Update an existing user"
     description "Update the details of an existing user"
     parameters do
       id :path, :string, "The ID of the user", required: true
-      user :body, Schema.ref(:User), "The user details to be updated"
+      email :query, :string, "The new email address of the user to be updated"
     end
     response 200, "Ok", Schema.ref(:User)
     response 422, "Unprocessable Entity", Schema.ref(:Error)
@@ -112,7 +112,7 @@ defmodule ExFooWeb.UserController do
   end
 
   swagger_path :delete do
-    delete "/{id}"
+    delete "/users/{userId}"
     summary "Delete a user"
     description "Remove a user from the application"
     parameters do
