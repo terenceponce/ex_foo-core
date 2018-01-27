@@ -42,7 +42,12 @@ defmodule ExFoo.Authentication do
 
   ## Examples
 
-      iex> create_user(%{field: value})
+      iex> attrs = %{
+      ...>   email: "test@example.com",
+      ...>   password: "validpassword",
+      ...>   password_confirmation: "validpassword"
+      ...> }
+      iex> create_user(attrs)
       {:ok, %User{}}
 
       iex> create_user(%{field: bad_value})
@@ -51,7 +56,7 @@ defmodule ExFoo.Authentication do
   """
   def create_user(attrs \\ %{}) do
     %User{}
-    |> User.changeset(attrs)
+    |> User.register_changeset(attrs)
     |> Repo.insert()
   end
 

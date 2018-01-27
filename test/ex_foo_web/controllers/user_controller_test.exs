@@ -3,9 +3,9 @@ defmodule ExFooWeb.UserControllerTest do
   use PhoenixSwagger.SchemaTest, "priv/static/swagger.json"
   import ExFoo.Factory
 
-  @create_attrs %{email: "test@example.com", encrypted_password: "some encrypted_password"}
-  @update_attrs %{email: "updated@example.com", encrypted_password: "some updated encrypted_password"}
-  @invalid_attrs %{email: nil, encrypted_password: nil}
+  @create_attrs %{email: "test@example.com", password: "validpassword", password_confirmation: "validpassword"}
+  @update_attrs %{email: "updated@example.com"}
+  @invalid_attrs %{email: nil}
 
   setup %{conn: conn} do
     {:ok, conn: put_req_header(conn, "accept", "application/json")}
@@ -42,7 +42,7 @@ defmodule ExFooWeb.UserControllerTest do
   describe "create user" do
     test "renders user when data is valid", %{conn: conn, swagger_schema: schema} do
       data = conn
-        |> post(user_path(conn, :create), user: @create_attrs)
+        |> post(user_path(conn, :create), @create_attrs)
         |> validate_resp_schema(schema, "User")
         |> json_response(201)
 
@@ -53,7 +53,7 @@ defmodule ExFooWeb.UserControllerTest do
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
-      conn = post conn, user_path(conn, :create), user: @invalid_attrs
+      conn = post conn, user_path(conn, :create), @invalid_attrs
       assert json_response(conn, 422)["errors"] != %{}
     end
   end

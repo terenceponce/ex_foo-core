@@ -54,18 +54,20 @@ defmodule ExFooWeb.UserController do
   end
 
   swagger_path :create do
-    post "/"
+    post "/users"
     summary "Add a new user"
     description "Register a new user to the application"
     parameters do
-      user :body, Schema.ref(:User), "User to be created", required: true
+      email :query, :string, "Email Address of the user to be created", required: true
+      password :query, :string, "Password that will be assigned to the user", required: true, format: "password"
+      password_confirmation :query, :string, "Check to see if password has been written correctly", required: true, format: "password"
     end
     response 201, "Ok", Schema.ref(:User)
     response 422, "Unprocessable Entity", Schema.ref(:Error)
   end
 
-  def create(conn, %{"user" => user_params}) do
-    with {:ok, %User{} = user} <- AuthContext.create_user(user_params) do
+  def create(conn, params) do
+    with {:ok, %User{} = user} <- AuthContext.create_user(params) do
       conn
       |> put_status(:created)
       |> put_resp_header("location", user_path(conn, :show, user))
