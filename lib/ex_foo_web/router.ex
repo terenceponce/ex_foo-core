@@ -1,8 +1,10 @@
 defmodule ExFooWeb.Router do
   use ExFooWeb, :router
+  alias ExFooWeb.APIVersion
 
   pipeline :api do
-    plug :accepts, ["json"]
+    plug :accepts, ["json", :v1]
+    plug APIVersion
   end
 
   scope "/api", ExFooWeb do

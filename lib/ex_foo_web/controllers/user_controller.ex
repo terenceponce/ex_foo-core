@@ -42,15 +42,15 @@ defmodule ExFooWeb.UserController do
   end
 
   swagger_path :index do
-    get "/"
+    get "/users"
     summary "List all users"
     description "List all users registered in the application"
     response 200, "Ok", Schema.ref(:Users)
   end
 
-  def index(conn, _params) do
+  def index(%{assigns: %{version: :v1}} = conn, _params) do
     users = AuthContext.list_users()
-    render(conn, "index.json", users: users)
+    render(conn, "index.v1.json", users: users)
   end
 
   swagger_path :create do
@@ -66,17 +66,17 @@ defmodule ExFooWeb.UserController do
     response 422, "Unprocessable Entity", Schema.ref(:Error)
   end
 
-  def create(conn, params) do
+  def create(%{assigns: %{version: :v1}} = conn, params) do
     with {:ok, %User{} = user} <- AuthContext.create_user(params) do
       conn
       |> put_status(:created)
       |> put_resp_header("location", user_path(conn, :show, user))
-      |> render("show.json", user: user)
+      |> render("show.v1.json", user: user)
     end
   end
 
   swagger_path :show do
-    get "/{id}"
+    get "/users/{userId}"
     summary "Retrieve a user"
     description "Retrieve a user registered in the application"
     parameters do
@@ -86,33 +86,33 @@ defmodule ExFooWeb.UserController do
     response 404, "Not Found", Schema.ref(:Error)
   end
 
-  def show(conn, %{"id" => id}) do
+  def show(%{assigns: %{version: :v1}} = conn, %{"id" => id}) do
     user = AuthContext.get_user(id)
-    render(conn, "show.json", user: user)
+    render(conn, "show.v1.json", user: user)
   end
 
   swagger_path :update do
-    patch "/{id}"
+    patch "/users/{userId}"
     summary "Update an existing user"
     description "Update the details of an existing user"
     parameters do
       id :path, :string, "The ID of the user", required: true
-      user :body, Schema.ref(:User), "The user details to be updated"
+      email :query, :string, "The new email address of the user to be updated"
     end
     response 200, "Ok", Schema.ref(:User)
     response 422, "Unprocessable Entity", Schema.ref(:Error)
   end
 
-  def update(conn, %{"id" => id, "user" => user_params}) do
+  def update(%{assigns: %{version: :v1}} = conn, %{"id" => id, "user" => user_params}) do
     user = AuthContext.get_user(id)
 
     with {:ok, %User{} = user} <- AuthContext.update_user(user, user_params) do
-      render(conn, "show.json", user: user)
+      render(conn, "show.v1.json", user: user)
     end
   end
 
   swagger_path :delete do
-    delete "/{id}"
+    delete "/users/{userId}"
     summary "Delete a user"
     description "Remove a user from the application"
     parameters do
@@ -122,7 +122,7 @@ defmodule ExFooWeb.UserController do
     response 404, "Not Found"
   end
 
-  def delete(conn, %{"id" => id}) do
+  def delete(%{assigns: %{version: :v1}} = conn, %{"id" => id}) do
     user = AuthContext.get_user(id)
     with {:ok, %User{}} <- AuthContext.delete_user(user) do
       send_resp(conn, :no_content, "")
