@@ -99,7 +99,7 @@
         "description": "Remove a user from the application"
       }
     },
-    "/": {
+    "/users": {
       "post": {
         "tags": [
           "User"
@@ -121,18 +121,34 @@
         },
         "parameters": [
           {
-            "schema": {
-              "$ref": "#/definitions/User"
-            },
+            "type": "string",
             "required": true,
-            "name": "user",
-            "in": "body",
-            "description": "User to be created"
+            "name": "email",
+            "in": "query",
+            "description": "Email Address of the user to be created"
+          },
+          {
+            "type": "string",
+            "required": true,
+            "name": "password",
+            "in": "query",
+            "format": "password",
+            "description": "Password that will be assigned to the user"
+          },
+          {
+            "type": "string",
+            "required": true,
+            "name": "password_confirmation",
+            "in": "query",
+            "format": "password",
+            "description": "Check to see if password has been written correctly"
           }
         ],
         "operationId": "ExFooWeb.UserController.create",
         "description": "Register a new user to the application"
-      },
+      }
+    },
+    "/": {
       "get": {
         "tags": [
           "User"
