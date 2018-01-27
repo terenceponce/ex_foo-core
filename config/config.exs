@@ -23,7 +23,7 @@ config :logger, :console,
   metadata: [:request_id]
 
 config :plug, :mimes, %{
-  "application/vnd.app.v1+json" => [:v1]
+  "application/vnd.exfoo.v1+json" => [:v1]
 }
 
 # Import environment specific config. This must remain at the bottom
