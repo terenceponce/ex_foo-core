@@ -11,7 +11,7 @@ defmodule ExFooWeb.UserController do
     %{
       User: swagger_schema do
         title "User"
-        description "A user of the application"
+        description "A user of the platform"
         properties do
           id :string, "ID of the user", required: true
           email :string, "Email address of the user", required: true
@@ -44,7 +44,7 @@ defmodule ExFooWeb.UserController do
   swagger_path :index do
     get "/users"
     summary "List all users"
-    description "List all users registered in the application"
+    description "List all users registered in the platform"
     response 200, "Ok", Schema.ref(:Users)
   end
 
@@ -56,7 +56,7 @@ defmodule ExFooWeb.UserController do
   swagger_path :create do
     post "/users"
     summary "Add a new user"
-    description "Register a new user to the application"
+    description "Register a new user to the platform"
     parameters do
       email :query, :string, "Email Address of the user to be created", required: true
       password :query, :string, "Password that will be assigned to the user", required: true, format: "password"
@@ -78,7 +78,7 @@ defmodule ExFooWeb.UserController do
   swagger_path :show do
     get "/users/{userId}"
     summary "Retrieve a user"
-    description "Retrieve a user registered in the application"
+    description "Retrieve a user registered in the platform"
     parameters do
       id :path, :string, "The ID of the user", required: true
     end
@@ -114,7 +114,7 @@ defmodule ExFooWeb.UserController do
   swagger_path :delete do
     delete "/users/{userId}"
     summary "Delete a user"
-    description "Remove a user from the application"
+    description "Remove a user from the platform"
     parameters do
       id :path, :string, "The ID of the user", required: true
     end
