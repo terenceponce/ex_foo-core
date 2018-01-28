@@ -26,6 +26,10 @@ config :plug, :mimes, %{
   "application/vnd.exfoo.v1+json" => [:v1]
 }
 
+config :ex_foo, ExFoo.Guardian,
+  issuer: "ex_foo",
+  secret_key: System.get_env("EX_FOO_GUARDIAN_SECRET_KEY")
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env}.exs"

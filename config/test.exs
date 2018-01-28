@@ -21,3 +21,7 @@ config :ex_foo, ExFoo.Repo,
 config :argon2_elixir,
   t_cost: 2,
   m_cost: 12
+
+config :ex_foo, ExFoo.Guardian,
+  issuer: "ex_foo",
+  secret_key: "QP+8cMNrdZga8shK7618R8bRNH7FTxIlV73LtGurfSYFxTOyrNsvXdQXepCBzx2F"
