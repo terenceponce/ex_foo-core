@@ -14,6 +14,7 @@ defmodule ExFooWeb.APIVersion do
   defp _call(conn, {:ok, [version]}) do
     assign(conn, :version, version)
   end
+
   defp _call(conn, _) do
     # If the API client did not specify anything, just assign the latest version
     assign(conn, :version, :v1)

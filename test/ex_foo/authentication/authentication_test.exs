@@ -7,7 +7,11 @@ defmodule ExFoo.AuthenticationTest do
   describe "users" do
     alias ExFoo.Authentication.User
 
-    @valid_attrs %{email: "test@example.com", password: "validpassword", password_confirmation: "validpassword"}
+    @valid_attrs %{
+      email: "test@example.com",
+      password: "validpassword",
+      password_confirmation: "validpassword"
+    }
     @update_attrs %{email: "updated@example.com"}
     @invalid_attrs %{email: nil, encrypted_password: nil}
 

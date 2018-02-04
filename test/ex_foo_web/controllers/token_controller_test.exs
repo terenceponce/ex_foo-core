@@ -5,12 +5,12 @@ defmodule ExFooWeb.TokenControllerTest do
 
   @valid_sign_in %{
     email: "test@example.com",
-    password: "validpassword",
+    password: "validpassword"
   }
 
   @invalid_sign_in %{
     email: "invalid@example.com",
-    password: "invalidpassword",
+    password: "invalidpassword"
   }
 
   setup %{conn: conn} do

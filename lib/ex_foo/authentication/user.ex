@@ -8,10 +8,10 @@ defmodule ExFoo.Authentication.User do
   alias ExFoo.Authentication.User
 
   schema "users" do
-    field :email, :string
-    field :password, :string, virtual: true
-    field :password_confirmation, :string, virtual: true
-    field :encrypted_password, :string
+    field(:email, :string)
+    field(:password, :string, virtual: true)
+    field(:password_confirmation, :string, virtual: true)
+    field(:encrypted_password, :string)
 
     timestamps()
   end
@@ -38,8 +38,9 @@ defmodule ExFoo.Authentication.User do
   end
 
   @doc false
-  defp put_password_hash(%Ecto.Changeset{valid?: true, changes: %{password: password}} = changeset) do
-    put_change(changeset, :encrypted_password, Argon2.hashpwsalt(password))
+  defp put_password_hash(%Ecto.Changeset{valid?: true, changes: %{password: password}} = ch) do
+    put_change(ch, :encrypted_password, Argon2.hashpwsalt(password))
   end
+
   defp put_password_hash(changeset), do: changeset
 end
