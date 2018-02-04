@@ -24,8 +24,6 @@ defmodule ExFoo.Authentication do
   @doc """
   Gets a single user.
 
-  Raises `Ecto.NoResultsError` if the User does not exist.
-
   ## Examples
 
       iex> get_user(123)
@@ -36,6 +34,20 @@ defmodule ExFoo.Authentication do
 
   """
   def get_user(id), do: Repo.get(User, id)
+
+  @doc """
+  Gets a single user using a field other than ID.
+
+  ## Examples
+
+      iex> get_user_by(%{email: "valid@example.com"})
+      %User{}
+
+      iex> get_user_by(%{invalid: "value"})
+      nil
+
+  """
+  def get_user_by(map) when map_size(map) == 1, do: Repo.get_by(User, map)
 
   @doc """
   Creates a user.

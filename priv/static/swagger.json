@@ -162,6 +162,51 @@
         "operationId": "ExFooWeb.UserController.index",
         "description": "List all users registered in the platform"
       }
+    },
+    "/token": {
+      "post": {
+        "tags": [
+          "Token"
+        ],
+        "summary": "Creates an authentication token",
+        "responses": {
+          "401": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            },
+            "description": "Unauthorized"
+          },
+          "200": {
+            "schema": {},
+            "headers": {
+              "Authorization": {
+                "type": "string",
+                "description": "Contains the token (JWT) that the API client can use to authenticate in subsequent requests"
+              }
+            },
+            "description": "Ok"
+          }
+        },
+        "parameters": [
+          {
+            "type": "string",
+            "required": true,
+            "name": "email",
+            "in": "query",
+            "description": "Email address of a registered user"
+          },
+          {
+            "type": "string",
+            "required": true,
+            "name": "password",
+            "in": "query",
+            "format": "password",
+            "description": "The corresponding password of the registered user"
+          }
+        ],
+        "operationId": "ExFooWeb.TokenController.create",
+        "description": "Creates an auth token that can be used to authorize subsequent requests"
+      }
     }
   },
   "info": {
