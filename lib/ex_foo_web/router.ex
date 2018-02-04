@@ -3,22 +3,25 @@ defmodule ExFooWeb.Router do
   alias ExFooWeb.APIVersion
 
   pipeline :api do
-    plug :accepts, ["json", :v1]
-    plug APIVersion
+    plug(:accepts, ["json", :v1])
+    plug(APIVersion)
   end
 
   scope "/api", ExFooWeb do
-    pipe_through :api
+    pipe_through(:api)
 
-    resources "/users", UserController, except: [:new, :edit]
-    resources "/token", TokenController, only: [:create]
+    resources("/users", UserController, except: [:new, :edit])
+    resources("/token", TokenController, only: [:create])
   end
 
   scope "/swagger" do
-    forward "/", PhoenixSwagger.Plug.SwaggerUI,
+    forward(
+      "/",
+      PhoenixSwagger.Plug.SwaggerUI,
       otp_app: :ex_foo,
       swagger_file: "swagger.json",
       disable_validator: true
+    )
   end
 
   def swagger_info do

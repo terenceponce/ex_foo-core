@@ -23,6 +23,7 @@ defmodule ExFoo.Guardian do
     sub = "User:" <> to_string(user.id)
     {:ok, sub}
   end
+
   def subject_for_token(_, _) do
     {:error, :unknown_resource}
   end
@@ -47,6 +48,7 @@ defmodule ExFoo.Guardian do
       resource -> {:ok, resource}
     end
   end
+
   def resource_from_claims(_claims) do
     {:error, :invalid_claim}
   end

@@ -15,7 +15,7 @@ defmodule ExFoo.Application do
       # Start the Ecto repository
       supervisor(ExFoo.Repo, []),
       # Start the endpoint when the application starts
-      supervisor(ExFooWeb.Endpoint, []),
+      supervisor(ExFooWeb.Endpoint, [])
       # Start your own worker by calling:
       # ExFoo.Worker.start_link(arg1, arg2, arg3)
       # worker(ExFoo.Worker, [arg1, arg2, arg3]),

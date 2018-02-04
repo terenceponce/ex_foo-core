@@ -5,7 +5,7 @@ defmodule ExFooWeb.TokenController do
   alias ExFoo.Authentication
   alias ExFoo.Guardian.Authentication, as: GuardianAuth
 
-  action_fallback ExFooWeb.FallbackController
+  action_fallback(ExFooWeb.FallbackController)
 
   swagger_path :create do
     post("/token")
@@ -14,6 +14,7 @@ defmodule ExFooWeb.TokenController do
 
     parameters do
       email(:query, :string, "Email address of a registered user", required: true)
+
       password(
         :query,
         :string,
@@ -22,18 +23,28 @@ defmodule ExFooWeb.TokenController do
         format: "password"
       )
     end
-    response(200, "Ok", %{}, headers: %{
-      "Authorization": %{
-        description: "Contains the token (JWT) that the API client can use to authenticate in subsequent requests",
-        type: :string
+
+    response(
+      200,
+      "Ok",
+      %{},
+      headers: %{
+        Authorization: %{
+          description:
+            "Contains the token (JWT) that the API client can use to authenticate in subsequent requests",
+          type: :string
+        }
       }
-    })
+    )
+
     response(401, "Unauthorized", Schema.ref(:Error))
   end
 
   def create(%{assigns: %{version: :v1}} = conn, %{"email" => email, "password" => password}) do
     user = Authentication.get_user_by(%{email: email})
-    token = user
+
+    token =
+      user
       |> GuardianAuth.verify_password(password)
       |> GuardianAuth.create_token()
 

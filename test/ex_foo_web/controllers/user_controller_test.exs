@@ -3,7 +3,11 @@ defmodule ExFooWeb.UserControllerTest do
   use PhoenixSwagger.SchemaTest, "priv/static/swagger.json"
   import ExFoo.Factory
 
-  @create_attrs %{email: "test@example.com", password: "validpassword", password_confirmation: "validpassword"}
+  @create_attrs %{
+    email: "test@example.com",
+    password: "validpassword",
+    password_confirmation: "validpassword"
+  }
   @update_attrs %{email: "updated@example.com"}
   @invalid_attrs %{email: nil}
 
@@ -15,7 +19,9 @@ defmodule ExFooWeb.UserControllerTest do
     test "lists all users", %{conn: conn, swagger_schema: schema} do
       user = insert(:user)
       user2 = insert(:user)
-      data = conn
+
+      data =
+        conn
         |> get(user_path(conn, :index))
         |> validate_resp_schema(schema, "Users")
         |> json_response(200)
@@ -25,13 +31,13 @@ defmodule ExFooWeb.UserControllerTest do
           "id" => "#{user.id}",
           "email" => user.email,
           "inserted_at" => NaiveDateTime.to_iso8601(user.inserted_at),
-          "updated_at" => NaiveDateTime.to_iso8601(user.updated_at),
+          "updated_at" => NaiveDateTime.to_iso8601(user.updated_at)
         },
         %{
           "id" => "#{user2.id}",
           "email" => user2.email,
           "inserted_at" => NaiveDateTime.to_iso8601(user2.inserted_at),
-          "updated_at" => NaiveDateTime.to_iso8601(user2.updated_at),
+          "updated_at" => NaiveDateTime.to_iso8601(user2.updated_at)
         }
       ]
 
@@ -41,7 +47,8 @@ defmodule ExFooWeb.UserControllerTest do
 
   describe "create user" do
     test "renders user when data is valid", %{conn: conn, swagger_schema: schema} do
-      data = conn
+      data =
+        conn
         |> post(user_path(conn, :create), @create_attrs)
         |> validate_resp_schema(schema, "User")
         |> json_response(201)
@@ -53,7 +60,7 @@ defmodule ExFooWeb.UserControllerTest do
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
-      conn = post conn, user_path(conn, :create), @invalid_attrs
+      conn = post(conn, user_path(conn, :create), @invalid_attrs)
       assert json_response(conn, 422)["errors"] != %{}
     end
   end
@@ -62,7 +69,8 @@ defmodule ExFooWeb.UserControllerTest do
     setup [:create_user]
 
     test "renders user when data is valid", %{conn: conn, user: user, swagger_schema: schema} do
-      data = conn
+      data =
+        conn
         |> put(user_path(conn, :update, user), user: @update_attrs)
         |> validate_resp_schema(schema, "User")
         |> json_response(200)
@@ -74,7 +82,7 @@ defmodule ExFooWeb.UserControllerTest do
     end
 
     test "renders errors when data is invalid", %{conn: conn, user: user} do
-      conn = put conn, user_path(conn, :update, user), user: @invalid_attrs
+      conn = put(conn, user_path(conn, :update, user), user: @invalid_attrs)
       assert json_response(conn, 422)["errors"] != %{}
     end
   end
@@ -83,7 +91,7 @@ defmodule ExFooWeb.UserControllerTest do
     setup [:create_user]
 
     test "deletes chosen user", %{conn: conn, user: user} do
-      conn = delete conn, user_path(conn, :delete, user)
+      conn = delete(conn, user_path(conn, :delete, user))
       assert response(conn, 204)
     end
   end
