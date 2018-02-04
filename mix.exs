@@ -48,6 +48,7 @@ defmodule ExFoo.Mixfile do
       {:ex_machina, "~> 2.1", only: :test},
       {:comeonin, "~> 4.0"},
       {:argon2_elixir, "~> 1.2"},
+      {:guardian, "~> 1.0"}
     ]
   end
 

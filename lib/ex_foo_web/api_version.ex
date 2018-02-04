@@ -1,4 +1,5 @@
 defmodule ExFooWeb.APIVersion do
+  @moduledoc "Plug module for API versioning"
   @versions Application.get_env(:plug, :mimes)
   import Plug.Conn
 

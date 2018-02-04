@@ -44,3 +44,7 @@ config :ex_foo, ExFoo.Repo,
   database: "ex_foo_dev",
   hostname: "localhost",
   pool_size: 10
+
+config :ex_foo, ExFoo.Guardian,
+  issuer: "ex_foo",
+  secret_key: "QP+8cMNrdZga8shK7618R8bRNH7FTxIlV73LtGurfSYFxTOyrNsvXdQXepCBzx2F"
