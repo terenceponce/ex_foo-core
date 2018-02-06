@@ -262,12 +262,17 @@
       "type": "object",
       "title": "Error",
       "required": [
-        "error"
+        "message",
+        "code"
       ],
       "properties": {
-        "error": {
+        "message": {
           "type": "string",
-          "description": "The message of the error raised"
+          "description": "The detail of the error raised"
+        },
+        "code": {
+          "type": "string",
+          "description": "The status code of the error"
         }
       },
       "description": "Error responses from the API"

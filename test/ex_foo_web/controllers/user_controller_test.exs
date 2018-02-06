@@ -65,6 +65,30 @@ defmodule ExFooWeb.UserControllerTest do
     end
   end
 
+  describe "show user" do
+    test "renders user when id is valid", %{conn: conn, swagger_schema: schema} do
+      user = insert(:user)
+      data =
+        conn
+        |> get(user_path(conn, :show, user))
+        |> validate_resp_schema(schema, "User")
+        |> json_response(200)
+
+      assert data["id"] == "#{user.id}"
+    end
+
+    test "renders error when id is invalid", %{conn: conn, swagger_schema: schema} do
+      data =
+        conn
+        |> get(user_path(conn, :show, 12345))
+        |> validate_resp_schema(schema, "Error")
+        |> json_response(404)
+
+      assert data["code"] == "404"
+      assert data["message"] == "Resource not found"
+    end
+  end
+
   describe "update user" do
     setup [:create_user]
 
