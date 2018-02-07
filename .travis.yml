@@ -1,7 +1,7 @@
 dist: trusty
 sudo: false
 language: elixir
-elixir: 1.6
+elixir: 1.6.1
 otp_release: '20.2'
 env: MIX_ENV=test
 script: mix coveralls.travis
