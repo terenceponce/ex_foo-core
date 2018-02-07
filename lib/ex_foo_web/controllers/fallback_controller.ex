@@ -8,13 +8,13 @@ defmodule ExFooWeb.FallbackController do
 
   def call(conn, {:error, %Ecto.Changeset{} = changeset}) do
     conn
-    |> put_status(:unprocessable_entity)
+    |> put_status(422)
     |> render(ExFooWeb.ChangesetView, "error.json", changeset: changeset)
   end
 
-  def call(conn, {:error, :not_found}) do
+  def call(conn, nil) do
     conn
-    |> put_status(:not_found)
-    |> render(ExFooWeb.ErrorView, :"404")
+    |> put_status(404)
+    |> render(ExFooWeb.ErrorView, "404.json")
   end
 end

@@ -258,16 +258,33 @@
       },
       "description": "A user of the platform"
     },
+    "Errors": {
+      "type": "array",
+      "title": "Errors",
+      "items": {
+        "$ref": "#/definitions/Error"
+      },
+      "description": "A collection of errors"
+    },
     "Error": {
       "type": "object",
       "title": "Error",
       "required": [
-        "error"
+        "message",
+        "code"
       ],
       "properties": {
-        "error": {
+        "message": {
           "type": "string",
-          "description": "The message of the error raised"
+          "description": "The detail of the error raised"
+        },
+        "field": {
+          "type": "string",
+          "description": "Field / Attribute that was affected"
+        },
+        "code": {
+          "type": "string",
+          "description": "The status code of the error"
         }
       },
       "description": "Error responses from the API"

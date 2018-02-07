@@ -5,7 +5,10 @@ defmodule ExFooWeb.ErrorViewTest do
   import Phoenix.View
 
   test "renders 404.json" do
-    assert render(ExFooWeb.ErrorView, "404.json", []) == %{errors: %{detail: "Page not found"}}
+    assert render(ExFooWeb.ErrorView, "404.json", []) == %{
+             code: "404",
+             message: "Resource not found"
+           }
   end
 
   test "render 500.json" do

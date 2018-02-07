@@ -41,8 +41,17 @@ defmodule ExFooWeb.UserController do
           description("Error responses from the API")
 
           properties do
-            error(:string, "The message of the error raised", required: true)
+            code(:string, "The status code of the error", required: true)
+            message(:string, "The detail of the error raised", required: true)
+            field(:string, "Field / Attribute that was affected")
           end
+        end,
+      Errors:
+        swagger_schema do
+          title("Errors")
+          description("A collection of errors")
+          type(:array)
+          items(Schema.ref(:Error))
         end
     }
   end
@@ -111,8 +120,9 @@ defmodule ExFooWeb.UserController do
   end
 
   def show(%{assigns: %{version: :v1}} = conn, %{"id" => id}) do
-    user = AuthContext.get_user(id)
-    render(conn, "show.v1.json", user: user)
+    with %User{} = user <- AuthContext.get_user(id) do
+      render(conn, "show.v1.json", user: user)
+    end
   end
 
   swagger_path :update do
@@ -129,10 +139,10 @@ defmodule ExFooWeb.UserController do
     response(422, "Unprocessable Entity", Schema.ref(:Error))
   end
 
-  def update(%{assigns: %{version: :v1}} = conn, %{"id" => id, "user" => user_params}) do
+  def update(%{assigns: %{version: :v1}} = conn, %{"id" => id} = params) do
     user = AuthContext.get_user(id)
 
-    with {:ok, %User{} = user} <- AuthContext.update_user(user, user_params) do
+    with {:ok, %User{} = user} <- AuthContext.update_user(user, params) do
       render(conn, "show.v1.json", user: user)
     end
   end
