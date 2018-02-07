@@ -104,7 +104,7 @@ defmodule ExFooWeb.UserControllerTest do
     test "renders user when data is valid", %{conn: conn, user: user, swagger_schema: schema} do
       data =
         conn
-        |> put(user_path(conn, :update, user), user: @update_attrs)
+        |> put(user_path(conn, :update, user), @update_attrs)
         |> validate_resp_schema(schema, "User")
         |> json_response(200)
 
@@ -117,7 +117,7 @@ defmodule ExFooWeb.UserControllerTest do
     test "renders errors when data is invalid", %{conn: conn, user: user, swagger_schema: schema} do
       data =
         conn
-        |> put(user_path(conn, :update, user), user: @invalid_attrs)
+        |> put(user_path(conn, :update, user), @invalid_attrs)
         |> validate_resp_schema(schema, "Errors")
         |> json_response(422)
         |> Enum.at(0)

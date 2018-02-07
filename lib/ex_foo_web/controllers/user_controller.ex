@@ -139,10 +139,10 @@ defmodule ExFooWeb.UserController do
     response(422, "Unprocessable Entity", Schema.ref(:Error))
   end
 
-  def update(%{assigns: %{version: :v1}} = conn, %{"id" => id, "user" => user_params}) do
+  def update(%{assigns: %{version: :v1}} = conn, %{"id" => id} = params) do
     user = AuthContext.get_user(id)
 
-    with {:ok, %User{} = user} <- AuthContext.update_user(user, user_params) do
+    with {:ok, %User{} = user} <- AuthContext.update_user(user, params) do
       render(conn, "show.v1.json", user: user)
     end
   end
