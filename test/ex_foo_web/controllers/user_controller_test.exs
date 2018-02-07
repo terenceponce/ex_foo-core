@@ -59,15 +59,24 @@ defmodule ExFooWeb.UserControllerTest do
       refute data["updated_at"] == nil
     end
 
-    test "renders errors when data is invalid", %{conn: conn} do
-      conn = post(conn, user_path(conn, :create), @invalid_attrs)
-      assert json_response(conn, 422)["errors"] != %{}
+    test "renders errors when data is invalid", %{conn: conn, swagger_schema: schema} do
+      data =
+        conn
+        |> post(user_path(conn, :create), @invalid_attrs)
+        |> validate_resp_schema(schema, "Errors")
+        |> json_response(422)
+        |> Enum.at(0)
+
+      assert data["code"] == "422"
+      assert data["field"] == "email"
+      assert data["message"] == "can't be blank"
     end
   end
 
   describe "show user" do
     test "renders user when id is valid", %{conn: conn, swagger_schema: schema} do
       user = insert(:user)
+
       data =
         conn
         |> get(user_path(conn, :show, user))
@@ -105,9 +114,17 @@ defmodule ExFooWeb.UserControllerTest do
       refute data["updated_at"] == NaiveDateTime.to_iso8601(user.updated_at)
     end
 
-    test "renders errors when data is invalid", %{conn: conn, user: user} do
-      conn = put(conn, user_path(conn, :update, user), user: @invalid_attrs)
-      assert json_response(conn, 422)["errors"] != %{}
+    test "renders errors when data is invalid", %{conn: conn, user: user, swagger_schema: schema} do
+      data =
+        conn
+        |> put(user_path(conn, :update, user), user: @invalid_attrs)
+        |> validate_resp_schema(schema, "Errors")
+        |> json_response(422)
+        |> Enum.at(0)
+
+      assert data["code"] == "422"
+      assert data["field"] == "email"
+      assert data["message"] == "can't be blank"
     end
   end
 

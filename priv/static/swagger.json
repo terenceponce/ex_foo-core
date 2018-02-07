@@ -258,6 +258,14 @@
       },
       "description": "A user of the platform"
     },
+    "Errors": {
+      "type": "array",
+      "title": "Errors",
+      "items": {
+        "$ref": "#/definitions/Error"
+      },
+      "description": "A collection of errors"
+    },
     "Error": {
       "type": "object",
       "title": "Error",
@@ -269,6 +277,10 @@
         "message": {
           "type": "string",
           "description": "The detail of the error raised"
+        },
+        "field": {
+          "type": "string",
+          "description": "Field / Attribute that was affected"
         },
         "code": {
           "type": "string",

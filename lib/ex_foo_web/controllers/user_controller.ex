@@ -43,7 +43,15 @@ defmodule ExFooWeb.UserController do
           properties do
             code(:string, "The status code of the error", required: true)
             message(:string, "The detail of the error raised", required: true)
+            field(:string, "Field / Attribute that was affected")
           end
+        end,
+      Errors:
+        swagger_schema do
+          title("Errors")
+          description("A collection of errors")
+          type(:array)
+          items(Schema.ref(:Error))
         end
     }
   end
